@@ -260,27 +260,27 @@ HideConsole
 $DispScript = {
 . ($env:APPDATA+'\Proc\PseudoProf.ps1')
 
-$Global:Temp = ''
+$Global:Check = ''
 
 $Window = (GUI -SX 500 -SY 500 -TE 'Proc')
-$Window.Maximize = $true
+$Window.MaximizeBox = $True
 $Timer = New-Object System.Windows.Forms.Timer
-$Timer.Interval = 500
+$Timer.Interval = 40
 $Timer.Add_Tick({
-    If($Global:Temp -ne [String](Get-Content ($env:APPDATA+'\Proc\Code.ps1')))
+    While($Global:Check -ne [String](Get-Content ($env:APPDATA+'\Proc\Code.ps1')))
     {
-        $Window.Controls | %{$Window.Controls.Remove($_)}
-        Try{
+        $Global:Check = [String](Get-Content ($env:APPDATA+'\Proc\Code.ps1'))
+
+        Try
+        {
+            0..4 | %{$Window.Controls | %{$Window.Controls.Remove($_)}}
+
             . ($env:APPDATA+'\Proc\Code.ps1')
         }Catch{}
-        $Window.Controls | %{$Window.Controls.Remove($_)}
-        Try{
-            . ($env:APPDATA+'\Proc\Code.ps1')
-        }Catch{}
-        $Global:Temp = [String](Get-Content ($env:APPDATA+'\Proc\Code.ps1'))
+
+        $Window.Controls | %{$_.Refresh()}
+        $Window.Refresh()
     }
-    
-    $Window.Refresh()
 })
 
 $Timer.Start()
@@ -301,7 +301,7 @@ Try{$Code.Text = (Get-Content ($env:APPDATA+'\Proc\Code.ps1') -ErrorAction Stop)
 
 $Code.WordWrap = $False
 $Code.ScrollBars = 'Both'
-$Code.TexCh({Try{([String]($This.Text -replace 'Global:' -replace '\$','$Global:' -replace '\$Global:This','$This' -replace 'Global\:_','_' -replace '\$Global:\(','$(' -replace '\$Global:env:','$env:' -replace '\$Global:False','$False' -replace '\$Global:True','$True')) | Out-File ($env:APPDATA+'\Proc\Code.ps1') -Width 10000 -EA 4 -Force}Catch{}})
+$Code.TexCh({Try{([String]($This.Text -replace 'Global:' -replace '\$','$Global:' -replace '\$Global:This','$This' -replace 'Global\:_','_' -replace '\$Global:\(','$(' -replace '\$Global:env:','$env:' -replace '\$Global:False','$False' -replace '\$Global:True','$True')) | Out-File ($env:APPDATA+'\Proc\Code.ps1') -Width 10000 -EA Stop -Force}Catch{}})
 
 $Restart = (GUI -B 60 25 190 465 'Restart')
 $Restart.Cl({
