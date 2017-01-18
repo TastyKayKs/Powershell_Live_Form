@@ -297,7 +297,7 @@ If((Get-Job -Name 'Disp' -EA 4 | ?{$_.State -match 'Running'}).Count -le 0)
 
 $Code = (GUI -TB 375 425 25 25)
 
-Try{$Code.Text = (Get-Content ($env:APPDATA+'\Proc\Code.ps1') -ErrorAction Stop) -join (NL) -replace 'Global:'}Catch{}
+Try{$Code.Text = (Get-Content ($env:APPDATA+'\Proc\Code.ps1') -ErrorAction Stop) -join (NL) -replace 'Global:True','GLOBALTAG' -replace 'Global:' -replace 'GLOBALTAG','Global:True'}Catch{}
 
 $Code.WordWrap = $False
 $Code.ScrollBars = 'Both'
@@ -311,7 +311,8 @@ $Code.TexCh({
         -replace '\$Global:False','$False' `
         -replace '\$Global:True','$True' `
         -replace 'Function ','Function Global:' `
-        -replace 'Global:Global','Global:')) | Out-File ($env:APPDATA+'\Proc\Code.ps1') -Width 10000 -EA Stop -Force
+        -replace 'Global:Global','Global:' `
+        -replace 'Global:NonGlobal')) | Out-File ($env:APPDATA+'\Proc\Code.ps1') -Width 10000 -EA Stop -Force
     }
     Catch
     {
