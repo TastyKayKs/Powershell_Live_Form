@@ -262,7 +262,7 @@ $DispScript = {
 
 $Global:Check = ''
 
-$Window = (GUI)
+$Window = (GUI 100 100)
 $Window.MaximizeBox = $True
 $Timer = New-Object System.Windows.Forms.Timer
 $Timer.Interval = 40
