@@ -301,7 +301,22 @@ Try{$Code.Text = (Get-Content ($env:APPDATA+'\Proc\Code.ps1') -ErrorAction Stop)
 
 $Code.WordWrap = $False
 $Code.ScrollBars = 'Both'
-$Code.TexCh({Try{([String]($This.Text -replace 'Global:' -replace '\$','$Global:' -replace '\$Global:This','$This' -replace 'Global\:_','_' -replace '\$Global:\(','$(' -replace '\$Global:env:','$env:' -replace '\$Global:False','$False' -replace '\$Global:True','$True')) | Out-File ($env:APPDATA+'\Proc\Code.ps1') -Width 10000 -EA Stop -Force}Catch{}})
+$Code.TexCh({
+    Try{
+        ([String]($This.Text -replace '\$','$Global:' `
+        -replace '\$Global:This','$This' `
+        -replace 'Global\:_','_' `
+        -replace '\$Global:\(','$(' `
+        -replace '\$Global:env:','$env:' `
+        -replace '\$Global:False','$False' `
+        -replace '\$Global:True','$True' `
+        -replace 'Function ','Function Global:' `
+        -replace 'Global:Global','Global:')) | Out-File ($env:APPDATA+'\Proc\Code.ps1') -Width 10000 -EA Stop -Force
+    }
+    Catch
+    {
+    }
+})
 
 $Restart = (GUI -B 60 25 190 465 'Restart')
 $Restart.Cl({
