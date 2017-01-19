@@ -30,10 +30,10 @@ Function Operate
 
 $Arr = @()
 
-$OP = '#'
-$Mem = '0'
-$Temp = '0'
-$LastOP = '#'
+$Global:LegalOP = '#'
+$Global:LegalMem = '0'
+$Global:LegalTemp = '0'
+$Global:LegalLastOP = '#'
 
 $Box = (GUI -TB 192 50 10 30)
 $Box.ReadOnly = $True
@@ -42,23 +42,23 @@ $Box.Text = '0'
 $Arr+=$Box
 
 $BMC = (GUI -B 36 29 10 84 'MC')
-$BMC.Cl({$Mem = '0'})
+$BMC.Cl({$Global:LegalMem = '0'})
 $Arr+=$BMC
 
 $BMR = (GUI -B 36 29 49 84 'MR')
-$BMR.Cl({$Box.Text = [Double]$Mem})
+$BMR.Cl({$Box.Text = [Double]$Global:LegalMem})
 $Arr+=$BMR
 
 $BMS = (GUI -B 36 29 88 84 'MS')
-$BMS.Cl({$Mem = [Double]($Box.Text)})
+$BMS.Cl({$Global:LegalMem = [Double]($Box.Text)})
 $Arr+=$BMS
 
 $BMPlus = (GUI -B 36 29 127 84 'M+')
-$BMPlus.Cl({$Mem = [Double]$Mem+[Double]($Box.Text)})
+$BMPlus.Cl({$Global:LegalMem = [Double]$Global:LegalMem+[Double]($Box.Text)})
 $Arr+=$BMPlus
 
 $BMMin = (GUI -B 36 29 166 84 'M-')
-$BMMin.Cl({$Mem = [Double]$Mem-[Double]($Box.Text)})
+$BMMin.Cl({$Global:LegalMem = [Double]$Global:LegalMem-[Double]($Box.Text)})
 $Arr+=$BMMin
 
 $BBack = (GUI -B 36 29 10 116 '←')
@@ -67,10 +67,10 @@ $Arr+=$BBack
 
 $BCE = (GUI -B 36 29 49 116 'CE')
 $BCE.Cl({
-    $OP = '#'
-    $Mem = '0'
-    $Temp = '0'
-    $LatOP = '#'
+    $Global:LegalOP = '#'
+    $Global:LegalMem = '0'
+    $Global:LegalTemp = '0'
+    $Global:LegalLatOP = '#'
     $Box.Text = '0'
 })
 $Arr+=$BCE
@@ -100,7 +100,7 @@ $B9.Cl({$Box.Text = [Double]([String]$Box.Text+'9')})
 $Arr+=$B9
 
 $BDiv = (GUI -B 36 29 127 148 '/')
-$BDiv.Cl({If($OP -eq '#'){$Temp = [Double]$Box.Text; $OP = '/'; $Box.Text = '0'}Else{$Temp = $(Operate $OP $LastOP $Temp $Box.Text); $LastOP = $OP; $Box.Text = '0'}})
+$BDiv.Cl({If($Global:LegalOP -eq '#'){$Global:LegalTemp = [Double]$Box.Text; $Global:LegalOP = '/'; $Box.Text = '0'}Else{$Global:LegalTemp = $(Operate $Global:LegalOP $Global:LegalLastOP $Global:LegalTemp $Box.Text); $Global:LegalLastOP = $Global:LegalOP; $Box.Text = '0'}})
 $Arr+=$BDiv
 
 $BPerc = (GUI -B 36 29 166 148 '%')
@@ -120,7 +120,7 @@ $B6.Cl({$Box.Text = [Double]([String]$Box.Text+'6')})
 $Arr+=$B6
 
 $BMult = (GUI -B 36 29 127 180 '*')
-$BMult.Cl({If($OP -eq '#'){$Temp = [Double]$Box.Text; $OP = '*'; $Box.Text = '0'}Else{$Temp = $(Operate $OP $LastOP $Temp $Box.Text); $LastOP = $OP; $Box.Text = '0'}})
+$BMult.Cl({If($Global:LegalOP -eq '#'){Global:Legal$Temp = [Double]$Box.Text; $Global:LegalOP = '*'; $Box.Text = '0'}Else{$Global:LegalTemp = $(Operate $Global:LegalOP $Global:LegalLastOP $Global:LegalTemp $Box.Text); $Global:LegalLastOP = $Global:LegalOP; $Box.Text = '0'}})
 $Arr+=$BMult
 
 $BInv = (GUI -B 36 29 166 180 '1/x')
@@ -140,11 +140,11 @@ $B3.Cl({$Box.Text = [Double]([String]$Box.Text+'3')})
 $Arr+=$B3
 
 $BMinus = (GUI -B 36 29 127 212 '-')
-$BMinus.Cl({If($OP -eq '#'){$Temp = [Double]$Box.Text; $OP = '-'; $Box.Text = '0'}Else{$Temp = $(Operate $OP $LastOP $Box.Text $Temp); $LastOP = $OP; $Box.Text = '0'}})
+$BMinus.Cl({If($Global:LegalOP -eq '#'){$Global:LegalTemp = [Double]$Box.Text; $Global:LegalOP = '-'; $Box.Text = '0'}Else{$Global:LegalTemp = $(Operate $Global:LegalOP $Global:LegalLastOP $Box.Text $Global:LegalTemp); $Global:LegalLastOP = $Global:LegalOP; $Box.Text = '0'}})
 $Arr+=$BMinus
 
 $BEqu = (GUI -B 36 61 166 212 '=')
-$BEqu.Cl({$Box.Text = $(Operate $OP $LastOP $Temp $Box.Text; If($OP -ne '#'){$Temp = $Box.Text; $LastOP = $OP}; $OP = '#')})
+$BEqu.Cl({$Box.Text = $(Operate $Global:LegalOP $Global:LegalLastOP $Global:LegalTemp $Box.Text; If($Global:LegalOP -ne '#'){$Global:LegalTemp = $Box.Text; $Global:LegalLastOP = $Global:LegalOP}; $Global:LegalOP = '#')})
 $Arr+=$BEqu
 
 $B0 = (GUI -B 75 29 10 244 '0')
@@ -156,7 +156,7 @@ $BPoint.Cl({If($Box.Text -notlike '*.*'){[String]$Box.Text+='.'}})
 $Arr+=$BPoint
 
 $BPlus = (GUI -B 36 29 127 244 '+')
-$BPlus.Cl({If($OP -eq '#'){$Temp = [Double]$Box.Text; $OP = '+'; $Box.Text = '0'}Else{$Temp = $(Operate $OP $LastOP $Temp $Box.Text); $LastOP = $OP; $Box.Text = '0'}})
+$BPlus.Cl({If($Global:LegalOP -eq '#'){$Global:LegalTemp = [Double]$Box.Text; $Global:LegalOP = '+'; $Box.Text = '0'}Else{$Global:LegalTemp = $(Operate $Global:LegalOP $Global:LegalLastOP $Global:LegalTemp $Box.Text); $Global:LegalLastOP = $Global:LegalOP; $Box.Text = '0'}})
 $Arr+=$BPlus
 
 $Window.InsArr($Arr)
