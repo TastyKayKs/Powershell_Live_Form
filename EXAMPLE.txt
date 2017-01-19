@@ -8,42 +8,25 @@ Function Operate
     Param([String]$NonGlobalOperand,[String]$NonGlobalPrevOperand,[String]$NonGlobalFirst,[String]$NonGlobalSecond)
     
     $NonGlobalFlip = $False
+    $NonGlobal1 = $NonGlobalFirst
+    $NonGlobal2 = $NonGlobalSecond
 
     If($NonGlobalOperand -eq '#')
     {
         $NonGlobalOperand = $NonGlobalPrevOperand
-        $NonGlobalFlip = $True
+        $NonGlobal1 = $NonGlobalSecond
+        $NonGlobal2 = $NonGlobalFirst
     }
 
     Switch($NonGlobalOperand)
     {
-        '/'
-        {
-            If($NonGlobalFlip)
-            {
-                $Result = [Double]([Double]$NonGlobalSecond/[Double]$NonGlobalFirst)
-            }
-            Else
-            {
-                $Result = [Double]([Double]$NonGlobalFirst/[Double]$NonGlobalSecond)
-            }
-        }
-        '*'{$Result = [Double]([Double]$NonGlobalFirst*[Double]$NonGlobalSecond)}
-        '-'
-        {
-            If($NonGlobalFlip)
-            {
-                $Result = [Double]([Double]$NonGlobalSecond-[Double]$NonGlobalFirst)
-            }
-            Else
-            {
-                $Result = [Double]([Double]$NonGlobalFirst-[Double]$NonGlobalSecond)
-            }
-        }
-        '+'{$Result = [Double]([Double]$NonGlobalFirst+[Double]$NonGlobalSecond)}
-        '#'{$Result = [Double]([Double]$NonGlobalFirst+[Double]$NonGlobalSecond)}
+        '/'{$NonGlobalResult = [Double]([Double]$NonGlobal1/[Double]$NonGlobal2)}
+        '*'{$NonGlobalResult = [Double]([Double]$NonGlobal1*[Double]$NonGlobal2)}
+        '-'{$NonGlobalResult = [Double]([Double]$NonGlobal1-[Double]$NonGlobal2)}
+        '+'{$NonGlobalResult = [Double]([Double]$NonGlobal1+[Double]$NonGlobal2)}
+        '#'{$NonGlobalResult = [Double]([Double]$NonGlobal1+[Double]$NonGlobal2)}
     }
-    Return $Result
+    Return $NonGlobalResult
 }
 
 $Arr = @()
