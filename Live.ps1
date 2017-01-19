@@ -312,7 +312,8 @@ $Code.TexCh({
         -replace '\$Global:True','$True' `
         -replace 'Function ','Function Global:' `
         -replace 'Global:Global','Global:' `
-        -replace 'Global:NonGlobal')) | Out-File ($env:APPDATA+'\Proc\Code.ps1') -Width 10000 -EA Stop -Force
+        -replace 'Global:NonGlobal','NonGlobal' `
+        -replace 'Global::Legal','Global:Legal')) | Out-File ($env:APPDATA+'\Proc\Code.ps1') -Width 10000 -EA Stop -Force
     }
     Catch
     {
