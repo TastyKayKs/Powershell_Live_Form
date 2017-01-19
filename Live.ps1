@@ -320,7 +320,10 @@ $Code.TexCh({
     }
 })
 
-$Restart = (GUI -B 60 25 190 465 'Restart')
+$Copy = (GUI -B 60 25 25 465 'Copy')
+$Copy.Cl({[Windows.Forms.ClipBoard]::SetText(([String](((Get-content ($env:APPDATA+'\Proc\PseudoProf.ps1')) -join (NL))+(NL)+'$Window = (GUI 100 100)'+(NL)+'$Window.MaximizeBox = $True'+(NL 2)+'HideConsole'+(NL 2)+($Code.Text)+(NL 2)+'$Window.Start()').TrimStart((NL))))})
+
+$Restart = (GUI -B 60 25 340 465 'Restart')
 $Restart.Cl({
     If((Get-Job -Name 'Disp' -EA 4 | ?{$_.State -match 'Running'}).Count -le 0)
     {
@@ -331,9 +334,10 @@ $Restart.Cl({
 $Main = (GUI 440 540 'Main Proc Page')
 $Main.Add_SizeChanged({
     $Code.Size = New-Object System.Drawing.Size(($This.Width-65),($This.Height-115))
-    $Restart.Location = New-Object System.Drawing.Size(($This.Width/2-30),($This.Height-75))
+    $Copy.Location = New-Object System.Drawing.Size(25,($This.Height-75))
+    $Restart.Location = New-Object System.Drawing.Size(($This.Width-100),($This.Height-75))
 })
-$Main.InsArr(@($Code,$Restart))
+$Main.InsArr(@($Code,$Copy,$Restart))
 $Main.Start()
 
 #Get-Job | ?{$_.Name -match 'Disp'} | Stop-Job -EA 4
