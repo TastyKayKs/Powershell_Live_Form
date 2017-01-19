@@ -6,8 +6,7 @@ $Window.MaximizeBox = $False
 Function Operate
 {
     Param([String]$NonGlobalOperand,[String]$NonGlobalPrevOperand,[String]$NonGlobalFirst,[String]$NonGlobalSecond)
-    
-    $NonGlobalFlip = $False
+
     $NonGlobal1 = $NonGlobalFirst
     $NonGlobal2 = $NonGlobalSecond
 
