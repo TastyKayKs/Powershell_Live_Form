@@ -5,22 +5,41 @@ $Window.MaximizeBox = $False
 
 Function Operate
 {
-    Param([String]$Operand,[String]$PrevOperand,[String]$NonGlobalFirst,[String]$NonGlobalSecond)
+    Param([String]$NonGlobalOperand,[String]$NonGlobalPrevOperand,[String]$NonGlobalFirst,[String]$NonGlobalSecond)
     
-    If($Operand -ne '#')
+    $NonGlobalFlip = $False
+
+    If($NonGlobalOperand -eq '#')
     {
-        $PrevOperand = $Operand
-    }
-    Else
-    {
-        $Operand = $PrevOperand
+        $NonGlobalOperand = $NonGlobalPrevOperand
+        $NonGlobalFlip = $True
     }
 
-    Switch($Operand)
+    Switch($NonGlobalOperand)
     {
-        '/'{$Result = [Double]([Double]$NonGlobalFirst/[Double]$NonGlobalSecond)}
+        '/'
+        {
+            If($NonGlobalFlip)
+            {
+                $Result = [Double]([Double]$NonGlobalSecond/[Double]$NonGlobalFirst)
+            }
+            Else
+            {
+                $Result = [Double]([Double]$NonGlobalFirst/[Double]$NonGlobalSecond)
+            }
+        }
         '*'{$Result = [Double]([Double]$NonGlobalFirst*[Double]$NonGlobalSecond)}
-        '-'{$Result = [Double]([Double]$NonGlobalFirst-[Double]$NonGlobalSecond)}
+        '-'
+        {
+            If($NonGlobalFlip)
+            {
+                $Result = [Double]([Double]$NonGlobalSecond-[Double]$NonGlobalFirst)
+            }
+            Else
+            {
+                $Result = [Double]([Double]$NonGlobalFirst-[Double]$NonGlobalSecond)
+            }
+        }
         '+'{$Result = [Double]([Double]$NonGlobalFirst+[Double]$NonGlobalSecond)}
         '#'{$Result = [Double]([Double]$NonGlobalFirst+[Double]$NonGlobalSecond)}
     }
@@ -139,7 +158,7 @@ $B3.Cl({$Box.Text = [Double]([String]$Box.Text+'3')})
 $Arr+=$B3
 
 $BMinus = (GUI -B 36 29 127 212 '-')
-$BMinus.Cl({If($OP -eq '#'){$Temp = [Double]$Box.Text; $OP = '-'; $Box.Text = '0'}Else{$Temp = $(Operate $OP $LastOP $Temp $Box.Text); $LastOP = $OP; $Box.Text = '0'}})
+$BMinus.Cl({If($OP -eq '#'){$Temp = [Double]$Box.Text; $OP = '-'; $Box.Text = '0'}Else{$Temp = $(Operate $OP $LastOP $Box.Text $Temp); $LastOP = $OP; $Box.Text = '0'}})
 $Arr+=$BMinus
 
 $BEqu = (GUI -B 36 61 166 212 '=')
