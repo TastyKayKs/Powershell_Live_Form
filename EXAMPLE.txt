@@ -120,7 +120,7 @@ $B6.Cl({$Box.Text = [Double]([String]$Box.Text+'6')})
 $Arr+=$B6
 
 $BMult = (GUI -B 36 29 127 180 '*')
-$BMult.Cl({If($Global:LegalOP -eq '#'){Global:Legal$Temp = [Double]$Box.Text; $Global:LegalOP = '*'; $Box.Text = '0'}Else{$Global:LegalTemp = $(Operate $Global:LegalOP $Global:LegalLastOP $Global:LegalTemp $Box.Text); $Global:LegalLastOP = $Global:LegalOP; $Box.Text = '0'}})
+$BMult.Cl({If($Global:LegalOP -eq '#'){$Global:LegalTemp = [Double]$Box.Text; $Global:LegalOP = '*'; $Box.Text = '0'}Else{$Global:LegalTemp = $(Operate $Global:LegalOP $Global:LegalLastOP $Global:LegalTemp $Box.Text); $Global:LegalLastOP = $Global:LegalOP; $Box.Text = '0'}})
 $Arr+=$BMult
 
 $BInv = (GUI -B 36 29 166 180 '1/x')
