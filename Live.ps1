@@ -290,14 +290,14 @@ $Timer.Stop()
 
 $DispScript | Out-File ($env:APPDATA+'\Proc\Disp.ps1') -Width 10000 -Force
 
-If((Get-Job -Name 'Disp' -EA 4 | ?{$_.State -match 'Running'}).Count -le 0)
+If((Get-Job -Name 'Disp' -EA SilentlyContinue | ?{$_.State -match 'Running'}).Count -le 0)
 {
     Start-Job -FilePath ($env:APPDATA+'\Proc\Disp.ps1') -Name 'Disp'
 }
 
 $Code = (GUI -TB 375 425 25 25)
 
-Try{$Code.Text = (Get-Content ($env:APPDATA+'\Proc\Code.ps1') -ErrorAction Stop) -join (NL) -replace 'Global:Legal','GLOBALTAG' -replace 'Global:' -replace 'GLOBALTAG','Global:Legal'}Catch{}
+Try{$Code.Text = (Get-Content ($env:APPDATA+'\Proc\Code.ps1') -EA Stop) -join (NL) -replace 'Global:Legal','GLOBALTAG' -replace 'Global:' -replace 'GLOBALTAG','Global:Legal'}Catch{}
 
 $Code.WordWrap = $False
 $Code.ScrollBars = 'Both'
@@ -325,7 +325,7 @@ $Copy.Cl({[Windows.Forms.ClipBoard]::SetText(([String](((Get-content ($env:APPDA
 
 $Restart = (GUI -B 60 25 340 465 'Restart')
 $Restart.Cl({
-    If((Get-Job -Name 'Disp' -EA 4 | ?{$_.State -match 'Running'}).Count -le 0)
+    If((Get-Job -Name 'Disp' -EA SilentlyContinue | ?{$_.State -match 'Running'}).Count -le 0)
     {
         Start-Job -FilePath ($env:APPDATA+'\Proc\Disp.ps1') -Name 'Disp'
     }
@@ -340,5 +340,5 @@ $Main.Add_SizeChanged({
 $Main.InsArr(@($Code,$Copy,$Restart))
 $Main.Start()
 
-#Get-Job | ?{$_.Name -match 'Disp'} | Stop-Job -EA 4
+#Get-Job | ?{$_.Name -match 'Disp'} | Stop-Job -EA SilentlyContinue
 #Get-Job | ?{$_.Status -notmatch 'Running'} | Remove-Job -Force
